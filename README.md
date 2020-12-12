@@ -14,6 +14,7 @@
 ## Stop Services
 * Kill services by port with `sh kill_services.sh`
 * Kill frontend in bash with __CTRL + C__
+* Stop Docker container `docker-compose down`
 ## Port usage
 | Name | Port |
 | - | - |
@@ -28,4 +29,4 @@
 | MongoDB | 27017 |
 | MongoDB Express | 8081 |
 ## Monitoring
-* You can monitor the database by browsing `http://localhost:8081/`
+* You can monitor the database by browsing http://localhost:8081/
