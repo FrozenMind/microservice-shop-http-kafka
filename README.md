@@ -14,7 +14,7 @@
 ## Stop Services
 * Kill services by port with `sh kill_services.sh`
 * Kill frontend in bash with __CTRL + C__
-## Services
+## Port usage
 | Name | Port |
 | - | - |
 | Webshop-Frontend | 4200 |
@@ -24,3 +24,8 @@
 | Login-Service | 61783 |
 | Payment-Service | 61784 |
 | Profile-Service | 61785 |
+| - | - |
+| MongoDB | 27017 |
+| MongoDB Express | 8081 |
+## Monitoring
+* You can monitor the database by browsing `http://localhost:8081/`
