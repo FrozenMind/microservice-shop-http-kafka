@@ -1,10 +1,12 @@
-let app = require('express')()
+let express = require('express')
+let app = express()
 let cors = require('cors')
 
 let serviceName = 'Webshop-Backend'
 let port = 61780
 
 app.use(cors())
+app.use(express.json())
 
 app.get('/ping', (req, res) => {
   console.log(`Ping ${serviceName}`);
