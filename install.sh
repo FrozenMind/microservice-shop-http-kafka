@@ -1,0 +1,22 @@
+#!/bin/bash
+cd article-service
+npm install
+cd ..
+cd cart-service
+npm install
+cd ..
+cd login-service
+npm install
+cd ..
+cd payment-service
+npm install
+cd ..
+cd profile-service
+npm install
+cd ..
+cd webshop-backend
+npm install
+cd ..
+cd webshop-frontend
+npm install
+cd ..
