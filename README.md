@@ -4,6 +4,7 @@
 ## Run
 * Run services with `sh run_services.sh`
 * Run frontend with `cd webshop-frontend && ng serve`
+* Run MongoDB and Kafka in Docker `docker-compose up -d`
 ## Stop Services
 * Kill services by port with `sh kill_services.sh`
 * Kill frontend in bash with CTRL + C
