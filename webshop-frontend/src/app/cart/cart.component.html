@@ -1,0 +1,25 @@
+<div>
+  <h2>Your Cart</h2>
+</div>
+<div>
+  <table>
+    <tr>
+      <th>Image</th>
+      <th>Article</th>
+      <th>Size</th>
+      <th>Amount</th>
+      <th>Price</th>
+      <th>Total Price</th>
+      <th>Action</th>
+    </tr>
+    <tr *ngFor="let a of articles">
+      <td>{{a.image}}</td>
+      <td>{{a.name}}</td>
+      <td>{{a.size}}</td>
+      <td>{{a.amount}}</td>
+      <td>{{a.price}}</td>
+      <td>{{a.totalPrice}}</td>
+      <td><button>Remove from Cart</button></td>
+    </tr>
+  </table>
+</div>

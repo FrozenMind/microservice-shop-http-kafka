@@ -12,4 +12,27 @@ export class HttpService {
   ping(port: number): Observable<any> {
     return this.http.get(`http://localhost:${port}/ping`);
   }
+
+  login(email: string, password: string): Observable<any> {
+    return this.http.put('http://localhost:61780/login', { email: email, password: password });
+  }
+
+  articles(pricemin: number, pricemax: number): Observable<any> {
+    let param = '';
+    if (pricemin) {
+      param += `pricemin=${pricemin}`;
+    }
+    if (pricemax) {
+      param += `pricemax=${pricemax}`;
+    }
+    return this.http.get(`http://localhost:61780/article?${param}`);
+  }
+
+  addToCart(userid: string, articleId: number, size: string): Observable<any> {
+    return this.http.post(`http://localhost:61780/cart/${userid}`, { articleId: articleId, size: size });
+  }
+
+  cart(userid: string): Observable<any> {
+    return this.http.get(`http://localhost:61780/cart/${userid}`);
+  }
 }

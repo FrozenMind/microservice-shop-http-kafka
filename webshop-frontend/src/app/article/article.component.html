@@ -1,0 +1,22 @@
+<nav>
+  <button (click)="goToCart()">Cart</button>
+</nav>
+<div>
+  <h3>Filter</h3>
+</div>
+<div>
+  <table>
+    <tr>
+      <th>Image</th>
+      <th>Article</th>
+      <th>Price</th>
+      <th>Action</th>
+    </tr>
+    <tr *ngFor="let a of articles">
+      <td>{{a.image}}</td>
+      <td>{{a.name}}</td>
+      <td>{{a.price}}</td>
+      <td><button (click)="addToCart(a._id)">Add to Cart</button></td>
+    </tr>
+  </table>
+</div>

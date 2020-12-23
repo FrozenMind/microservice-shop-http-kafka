@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../services/http.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -8,46 +9,23 @@ import { HttpService } from '../services/http.service';
 })
 export class LoginComponent implements OnInit {
 
-  webshopBackendServiceStatus: any;
-  articleServiceStatus: any;
-  cartServiceStatus: any;
-  loginServiceStatus: any;
-  paymentServiceStatus: any;
-  profileServiceStatus: any;
+  public email: string = '';
+  public password: string = '';
 
-  constructor(private httpService: HttpService) { }
+  constructor(private httpService: HttpService,
+   private router: Router) { }
 
   ngOnInit() {
-    this.httpService.ping(61780).subscribe(res => {
-      this.webshopBackendServiceStatus = res;
+  }
+
+  login() {
+    console.log('Try to login email', this.email, 'password', this.password);
+    this.httpService.login(this.email, this.password).subscribe(res => {
+      console.log('Login successful. Got user', res);
+      this.router.navigate([`/article/${res.userid}`]);
     }, err => {
-      this.webshopBackendServiceStatus = err;
-    });
-    this.httpService.ping(61781).subscribe(res => {
-      this.articleServiceStatus = res;
-    }, err => {
-      this.articleServiceStatus = err;
-    });
-    this.httpService.ping(61782).subscribe(res => {
-      this.cartServiceStatus = res;
-    }, err => {
-      this.cartServiceStatus = err;
-    });
-    this.httpService.ping(61783).subscribe(res => {
-      this.loginServiceStatus = res;
-    }, err => {
-      this.loginServiceStatus = err;
-    });
-    this.httpService.ping(61784).subscribe(res => {
-      this.paymentServiceStatus = res;
-    }, err => {
-      this.paymentServiceStatus = err;
-    });
-    this.httpService.ping(61785).subscribe(res => {
-      this.profileServiceStatus = res;
-    }, err => {
-      this.profileServiceStatus = err;
-    });
+      console.error('Failed to login', err);
+    })
   }
 
 }
