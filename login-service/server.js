@@ -44,7 +44,8 @@ app.put('/login', (req, res) => {
       console.log('Successful login')
       res.json({
         userid: data[0]._id,
-        name: data[0].name
+        name: data[0].name,
+        cartAmount: data[0].cart ? data[0].cart.length : 0
       })
     } else {
       console.log('Invalid username or password')

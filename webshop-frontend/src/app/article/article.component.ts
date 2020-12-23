@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { HttpService } from '../services/http.service';
+import { StateService } from '../services/state.service';
 
 @Component({
   selector: 'app-article',
@@ -12,13 +13,12 @@ export class ArticleComponent implements OnInit {
   userid: string;
   articles: any[];
 
-  constructor(private route: ActivatedRoute,
-    private router: Router,
-    private httpService: HttpService) { }
+  constructor(private httpService: HttpService,
+    private state: StateService) { }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.userid = params['userid'];
+    this.state.useridSub.subscribe(id => {
+      this.userid = id;
       console.log('Load article page for userid', this.userid);
     })
     this.httpService.articles(undefined, undefined).subscribe(res => {
@@ -33,12 +33,10 @@ export class ArticleComponent implements OnInit {
     // TODO: get size somehow
     this.httpService.addToCart(this.userid, articleId, 'M').subscribe(res => {
       console.log('Added article to cart');
+      this.state.setCartAmount(res.cartAmount);
     }, err => {
       console.error('Failed to add article to cart');
     })
   }
 
-  goToCart() {
-    this.router.navigate([`/cart/${this.userid}`]);
-  }
 }

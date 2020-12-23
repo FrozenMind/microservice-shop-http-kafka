@@ -1,1 +1,32 @@
-<router-outlet></router-outlet>
+<div class="container">
+  <div class="header">
+    <span>{{username}}</span>
+    <button (click)="goToCart()">Cart ({{cartAmount}})</button>
+    <button (click)="logout()">Logout</button>
+  </div>
+
+  <div class="main">
+    <router-outlet></router-outlet>
+  </div>
+
+  <div class="footer">
+    <div [ngClass]="'status-' + webshopBackendServiceStatus.status">
+      <span>Backend {{webshopBackendServiceStatus.status}}</span>
+    </div>
+    <div [ngClass]="'status-' + articleServiceStatus.status">
+      <span>Article Service {{articleServiceStatus.status}}</span>
+    </div>
+    <div [ngClass]="'status-' + cartServiceStatus.status">
+      <span>Cart Service {{cartServiceStatus.status}}</span>
+    </div>
+    <div [ngClass]="'status-' + loginServiceStatus.status">
+      <span>Login Service {{loginServiceStatus.status}}</span>
+    </div>
+    <div [ngClass]="'status-' + paymentServiceStatus.status">
+      <span>Payment Service {{paymentServiceStatus.status}}</span>
+    </div>
+    <div [ngClass]="'status-' + profileServiceStatus.status">
+      <span>Profile Service {{profileServiceStatus.status}}</span>
+    </div>
+  </div>
+</div>

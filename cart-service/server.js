@@ -68,7 +68,9 @@ app.post('/cart/:userid', (req, res) => {
     database.collection('user').replaceOne({
       _id: user._id
     }, user)
-    res.status(200).json({})
+    res.status(200).json({
+      cartAmount: user.cart.length
+    })
   })
 })
 

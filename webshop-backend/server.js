@@ -93,7 +93,7 @@ app.post('/cart/:userid', (req, res) => {
     })
     .then(response => {
       console.log('Added article to cart');
-      res.json({})
+      res.json(response.data)
     })
     .catch(error => {
       console.log('Error while adding article to cart', error.response.status);

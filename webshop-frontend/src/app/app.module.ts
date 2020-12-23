@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
 import { HttpService } from './services/http.service';
+import { StateService } from './services/state.service';
 import { FormsModule } from '@angular/forms';
 import { ArticleComponent } from './article/article.component';
 import { CartComponent } from './cart/cart.component';
@@ -23,7 +24,7 @@ import { CartComponent } from './cart/cart.component';
     HttpClientModule,
     FormsModule
   ],
-  providers: [HttpService],
+  providers: [HttpService, StateService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

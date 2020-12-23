@@ -1,0 +1,20 @@
+.article-main {
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+h2 {
+  margin-bottom: 48px;
+  padding: 16px;
+}
+
+table {
+  width: 100%;
+  padding: 16px;
+}
+
+td, th {
+  text-align: center;
+}
