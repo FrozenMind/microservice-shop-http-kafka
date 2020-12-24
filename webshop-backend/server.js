@@ -133,8 +133,7 @@ app.get('/cart/:userid', (req, res) => {
                   articleId: c.articleId,
                   size: c.size,
                   amount: c.amount,
-                  price: a.price,
-                  totalPrice: a.price * c.amount
+                  price: a.price
                 })
                 continue
               }
@@ -164,6 +163,61 @@ app.get('/cart/:userid', (req, res) => {
         case 404:
           res.status(404).json({
             error: 'User has no items in cart yet'
+          })
+          break
+        default:
+          res.status(error.status).json({
+            error: 'Unknown error'
+          })
+          break
+      }
+    });
+})
+
+app.put('/cart/:userid/:articleid', (req, res) => {
+  let userId = req.params.userid
+  let articleId = req.params.articleid
+  let amount = parseInt(req.body.amount)
+  console.log('Change amount of articleid', articleId, 'of userid', userId, 'to', amount)
+  axios.put(`http://localhost:61782/cart/${userId}/${articleId}`, {
+      amount: amount
+    })
+    .then(cartRes => {
+      console.log('Got cart', cartRes.data);
+      res.json(cartRes.data)
+    })
+    .catch(error => {
+      console.log('Error while getting cart', error.response.status);
+      switch (error.response.status) {
+        case 404:
+          res.status(404).json({
+            error: 'User does not exist or has article not in cart yet'
+          })
+          break
+        default:
+          res.status(error.status).json({
+            error: 'Unknown error'
+          })
+          break
+      }
+    });
+})
+
+app.delete('/cart/:userid/:articleid', (req, res) => {
+  let userId = req.params.userid
+  let articleId = req.params.articleid
+  console.log('Remove articleid', articleId, 'from cart of userid', userId)
+  axios.delete(`http://localhost:61782/cart/${userId}/${articleId}`)
+    .then(cartRes => {
+      console.log('Deleted article')
+      res.json(cartRes.data)
+    })
+    .catch(error => {
+      console.log('Error while getting cart', error.response.status);
+      switch (error.response.status) {
+        case 404:
+          res.status(404).json({
+            error: 'User does not exists'
           })
           break
         default:

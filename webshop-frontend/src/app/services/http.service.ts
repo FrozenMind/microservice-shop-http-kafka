@@ -35,4 +35,13 @@ export class HttpService {
   cart(userid: string): Observable<any> {
     return this.http.get(`http://localhost:61780/cart/${userid}`);
   }
+
+  removeFromCart(userid: string, articleId: number): Observable<any> {
+    return this.http.delete(`http://localhost:61780/cart/${userid}/${articleId}`);
+  }
+
+  changeAmount(userid: string, articleId: number, amount: number): Observable<any> {
+    return this.http.put(`http://localhost:61780/cart/${userid}/${articleId}`, { amount: amount });
+  }
+
 }

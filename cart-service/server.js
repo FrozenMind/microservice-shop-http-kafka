@@ -104,4 +104,82 @@ app.get('/cart/:userid', (req, res) => {
   })
 })
 
+app.put('/cart/:userid/:articleid', (req, res) => {
+  let userId = req.params.userid
+  let articleId = req.params.articleid
+  let amount = req.body.amount
+  console.log('Change amount of articleid', articleId, 'of userid', userId, 'to', amount)
+  database.collection('user').find({
+    _id: ObjectID(userId)
+  }).toArray((err, data) => {
+    if (err) {
+      console.log('Could not connect database')
+      res.status(500).json({
+        error: 'Could not connect database'
+      })
+      return
+    }
+    if (data.length != 1) {
+      res.status(404).json({
+        error: 'Could not find user'
+      })
+      return
+    }
+    let user = data[0]
+    if (user.cart || user.cart.length != 0) {
+      let index = user.cart.findIndex(c => c.articleId == articleId)
+      if (index != -1) {
+        user.cart[index].amount = amount
+        database.collection('user').replaceOne({
+          _id: user._id
+        }, user)
+        res.json({
+          newAmount: user.cart[index].amount
+        })
+      }
+    } else {
+      res.status(404).json({
+        error: 'Article is not in cart yet'
+      })
+    }
+  })
+})
+
+app.delete('/cart/:userid/:articleid', (req, res) => {
+  let userId = req.params.userid
+  let articleId = req.params.articleid
+  console.log('Remove articleid', articleId, 'from cart of userid', userId)
+  database.collection('user').find({
+    _id: ObjectID(userId)
+  }).toArray((err, data) => {
+    if (err) {
+      console.log('Could not connect database')
+      res.status(500).json({
+        error: 'Could not connect database'
+      })
+      return
+    }
+    if (data.length != 1) {
+      res.status(404).json({
+        error: 'Could not find user'
+      })
+      return
+    }
+    let user = data[0]
+    if (user.cart || user.cart.length != 0) {
+      let index = user.cart.findIndex(c => c.articleId == articleId)
+      console.log('Remove article at index', index);
+      if (index != -1) {
+        user.cart.splice(index, 1)
+        database.collection('user').replaceOne({
+          _id: user._id
+        }, user)
+      }
+    }
+    res.json({
+      cartAmount: user.cart.length
+    })
+  })
+})
+
 app.listen(port, () => console.log(`${serviceName} started on localhost:${port}`))

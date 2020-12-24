@@ -29,4 +29,28 @@ export class CartComponent implements OnInit {
     })
   }
 
+  removeFromCart(articleId: number) {
+    this.httpService.removeFromCart(this.userid, articleId).subscribe(res => {
+      console.log('Removed articleid', articleId, 'from cart');
+      let index = this.articles.findIndex(a => a.articleId == articleId)
+      if (index != -1) {
+        this.articles.splice(index, 1);
+      }
+      this.state.setCartAmount(res.cartAmount)
+    }, err => {
+      console.error('Failed to remove article from server', err);
+    });
+  }
+
+  changeAmount(articleId: number, amount: number) {
+    this.httpService.changeAmount(this.userid, articleId, amount).subscribe(res => {
+      console.log('Amount changed succesful for articleid', articleId);
+      let index = this.articles.findIndex(a => a.articleId == articleId)
+      if (index != -1) {
+        this.articles[index].amount = parseInt(res.newAmount);
+      }
+    }, err => {
+      console.error('Failed to remove article from server', err);
+    });
+  }
 }

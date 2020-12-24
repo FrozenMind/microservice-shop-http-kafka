@@ -74,6 +74,10 @@ export class AppComponent implements OnInit {
     this.router.navigate([`/cart`]);
   }
 
+  goToArticle() {
+    this.router.navigate([`/article`]);
+  }
+
   logout() {
     this.state.setUsername('');
     this.state.setUserid('');

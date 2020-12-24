@@ -1,6 +1,7 @@
 <div class="container">
   <div class="header">
     <span>{{username}}</span>
+    <button (click)="goToArticle()">Article</button>
     <button (click)="goToCart()">Cart ({{cartAmount}})</button>
     <button (click)="logout()">Logout</button>
   </div>
