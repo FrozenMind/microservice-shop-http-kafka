@@ -28,8 +28,8 @@ export class HttpService {
     return this.http.get(`http://localhost:61780/article?${param}`);
   }
 
-  addToCart(userid: string, articleId: number, size: string): Observable<any> {
-    return this.http.post(`http://localhost:61780/cart/${userid}`, { articleId: articleId, size: size });
+  addToCart(userid: string, articleId: number): Observable<any> {
+    return this.http.post(`http://localhost:61780/cart/${userid}`, { articleId: articleId });
   }
 
   cart(userid: string): Observable<any> {

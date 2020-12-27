@@ -31,7 +31,7 @@ export class ArticleComponent implements OnInit {
 
   addToCart(articleId: number) {
     // TODO: get size somehow
-    this.httpService.addToCart(this.userid, articleId, 'M').subscribe(res => {
+    this.httpService.addToCart(this.userid, articleId).subscribe(res => {
       console.log('Added article to cart');
       this.state.setCartAmount(res.cartAmount);
     }, err => {
