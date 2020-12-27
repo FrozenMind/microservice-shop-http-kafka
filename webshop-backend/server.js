@@ -85,11 +85,9 @@ app.get('/article', (req, res) => {
 app.post('/cart/:userid', (req, res) => {
   let userId = req.params.userid
   let articleId = req.body.articleId
-  let size = req.body.size
-  console.log('Add articleid, ', articleId, 'size', size, 'to cart of userid', userId)
+  console.log('Add articleid', articleId, 'to cart of userid', userId)
   axios.post(`http://localhost:61782/cart/${userId}`, {
-      articleId: articleId,
-      size: size
+      articleId: articleId
     })
     .then(response => {
       console.log('Added article to cart');
@@ -131,7 +129,6 @@ app.get('/cart/:userid', (req, res) => {
                   name: a.name,
                   image: a.image,
                   articleId: c.articleId,
-                  size: c.size,
                   amount: c.amount,
                   price: a.price
                 })

@@ -26,4 +26,8 @@
       <td><button (click)="removeFromCart(a.articleId)">Remove from Cart</button></td>
     </tr>
   </table>
+  <div>
+    <span><strong>Total: {{totalPrice()}}</strong></span>
+    <button (click)="checkout()">Checkout</button>
+  </div>
 </div>

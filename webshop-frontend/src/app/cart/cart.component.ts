@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { HttpService } from '../services/http.service';
 import { StateService } from '../services/state.service';
 
@@ -14,7 +14,8 @@ export class CartComponent implements OnInit {
   articles: any;
 
   constructor(private state: StateService,
-    private httpService: HttpService) { }
+    private httpService: HttpService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.state.useridSub.subscribe(id => {
@@ -52,5 +53,18 @@ export class CartComponent implements OnInit {
     }, err => {
       console.error('Failed to remove article from server', err);
     });
+  }
+
+  totalPrice() {
+    let sum = 0;
+    if (this.articles) {
+      this.articles.forEach(a => sum += a.price * a.amount);
+    }
+    return sum;
+  }
+
+  checkout() {
+    console.log('Checkout from cart');
+    this.router.navigate(['/checkout']);
   }
 }

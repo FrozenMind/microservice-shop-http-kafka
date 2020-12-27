@@ -10,13 +10,15 @@ import { StateService } from './services/state.service';
 import { FormsModule } from '@angular/forms';
 import { ArticleComponent } from './article/article.component';
 import { CartComponent } from './cart/cart.component';
+import { CheckoutComponent } from './checkout/checkout.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     ArticleComponent,
-    CartComponent
+    CartComponent,
+    CheckoutComponent
   ],
   imports: [
     BrowserModule,

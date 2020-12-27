@@ -31,8 +31,7 @@ app.get('/ping', (req, res) => {
 app.post('/cart/:userid', (req, res) => {
   let userId = req.params.userid
   let articleId = req.body.articleId
-  let size = req.body.size
-  console.log('Add articleId', articleId, 'size', size, 'to cart of userid', userId)
+  console.log('Add articleId', articleId, 'to cart of userid', userId)
   database.collection('user').find({
     _id: ObjectID(userId)
   }).toArray((err, data) => {
@@ -53,7 +52,7 @@ app.post('/cart/:userid', (req, res) => {
     if (!user.cart) {
       user.cart = []
     }
-    let index = user.cart.findIndex(c => c.articleId == articleId && c.size == size)
+    let index = user.cart.findIndex(c => c.articleId == articleId)
     if (index >= 0) {
       console.log('Article already exists in cart at index', index, 'so increase amount');
       user.cart[index].amount += 1
@@ -61,7 +60,6 @@ app.post('/cart/:userid', (req, res) => {
       console.log('Article does not exists in cart yet');
       user.cart.push({
         articleId: ObjectID(articleId),
-        size: size,
         amount: 1
       })
     }

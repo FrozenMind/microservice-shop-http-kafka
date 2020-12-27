@@ -1,0 +1,48 @@
+<div>
+  <h2>Checkout</h2>
+  <div>
+    <span><strong>Address</strong></span>
+    <table>
+      <tr>
+        <th>Name</th>
+        <td>
+          <span *ngIf="!changeAddressMode"></span>
+          <input *ngIf="changeAddressMode" />
+        </td>
+      </tr>
+      <tr>
+        <th>Street</th>
+        <td>
+          <span *ngIf="!changeAddressMode"></span>
+          <input *ngIf="changeAddressMode" />
+        </td>
+      </tr>
+      <tr>
+        <th>Zipcode</th>
+        <td>
+          <span *ngIf="!changeAddressMode"></span>
+          <input *ngIf="changeAddressMode" />
+        </td>
+      </tr>
+      <tr>
+        <th>City</th>
+        <td>
+          <span *ngIf="!changeAddressMode"></span>
+          <input *ngIf="changeAddressMode" />
+        </td>
+      </tr>
+      <tr>
+        <th>Country</th>
+        <td>
+          <span *ngIf="!changeAddressMode"></span>
+          <input *ngIf="changeAddressMode" />
+        </td>
+      </tr>
+    </table>
+    <button *ngIf="!changeAddressMode" (click)="changeAddressMode = true">Change Adress</button>
+    <button *ngIf="changeAddressMode" (click)="saveAddress()">Save Address</button>
+  </div>
+  <div>
+    <span><strong>Total Price {{totalPrice}}</strong></span>
+  </div>
+</div>
