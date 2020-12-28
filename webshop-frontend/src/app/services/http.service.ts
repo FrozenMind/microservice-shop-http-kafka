@@ -20,7 +20,7 @@ export class HttpService {
   articles(pricemin: number, pricemax: number): Observable<any> {
     let param = '';
     if (pricemin) {
-      param += `pricemin=${pricemin}`;
+      param += `pricemin=${pricemin}&`;
     }
     if (pricemax) {
       param += `pricemax=${pricemax}`;
@@ -44,4 +44,15 @@ export class HttpService {
     return this.http.put(`http://localhost:61780/cart/${userid}/${articleId}`, { amount: amount });
   }
 
+  getAddress(userId: string) {
+    return this.http.get(`http://localhost:61780/address/${userId}`);
+  }
+
+  saveAddress(userId: string, address: any) {
+    return this.http.put(`http://localhost:61780/address/${userId}`, { address: address });
+  }
+
+  getTotalCartPrice(userId: string) {
+    return this.http.get(`http://localhost:61782/cart/total-price/${userId}`);
+  }
 }

@@ -12,6 +12,8 @@ export class ArticleComponent implements OnInit {
 
   userid: string;
   articles: any[];
+  pricemin: number;
+  pricemax: number;
 
   constructor(private httpService: HttpService,
     private state: StateService) { }
@@ -21,7 +23,7 @@ export class ArticleComponent implements OnInit {
       this.userid = id;
       console.log('Load article page for userid', this.userid);
     })
-    this.httpService.articles(undefined, undefined).subscribe(res => {
+    this.httpService.articles(this.pricemin, this.pricemax).subscribe(res => {
       console.log('Received articles', res);
       this.articles = res;
     }, err => {
@@ -36,6 +38,16 @@ export class ArticleComponent implements OnInit {
       this.state.setCartAmount(res.cartAmount);
     }, err => {
       console.error('Failed to add article to cart');
+    })
+  }
+
+  applyFilter() {
+    this.httpService.articles(this.pricemin, this.pricemax).subscribe(res => {
+      console.log('Received articles', res);
+      this.articles = res;
+    }, err => {
+      this.articles = [];
+      console.error('Did not receive articles', err);
     })
   }
 

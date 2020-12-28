@@ -7,14 +7,22 @@
 
 h2 {
   margin-bottom: 48px;
-  padding: 16px;
+  padding: 32px;
 }
 
 table {
   width: 100%;
-  padding: 16px;
+  margin: 32px;
 }
 
 td, th {
   text-align: center;
+}
+
+.checkout-container {
+  margin: 32px;
+}
+
+.checkout-button {
+  margin-left: 32px;
 }

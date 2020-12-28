@@ -1,0 +1,33 @@
+.checkout-container {
+  width: 100vw;
+}
+
+h2 {
+  margin-bottom: 48px;
+  padding: 32px;
+}
+
+.pay-container {
+  margin: 32px;
+}
+
+.pay-button {
+  margin-left: 32px;
+}
+
+.address {
+  margin: 32px;
+}
+
+.address-table{
+  margin: 32px;
+  width: 100%;
+
+  td, th {
+    text-align: left;
+  }
+
+  td {
+    padding: 6px;
+  }
+}

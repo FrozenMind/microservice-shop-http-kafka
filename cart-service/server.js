@@ -180,4 +180,65 @@ app.delete('/cart/:userid/:articleid', (req, res) => {
   })
 })
 
+app.get('/cart/total-price/:userid', (req, res) => {
+  let userId = req.params.userid
+  console.log('Get total price of userid', userId)
+  database.collection('user').find({
+    _id: ObjectID(userId)
+  }).toArray((err, data) => {
+    if (err) {
+      console.log('Could not connect database')
+      res.status(500).json({
+        error: 'Could not connect database'
+      })
+      return
+    }
+    if (data.length != 1) {
+      res.status(404).json({
+        error: 'Could not find user'
+      })
+      return
+    }
+    let user = data[0]
+    if (!user.cart) {
+      res.status(404).json({
+        error: 'User has no cart'
+      })
+    } else {
+      let totalPrice = 0
+      console.log(user.cart);
+      let ids = []
+      user.cart.forEach(c => {
+        ids.push(ObjectID(c.articleId))
+      })
+      database.collection('article').find({
+        _id: {
+          $in: ids
+        }
+      }).toArray((err, data) => {
+        if (err) {
+          console.log('Could not connect database')
+          res.status(500).json({
+            error: 'Could not connect database'
+          })
+          return
+        }
+        console.log('Got articles', data);
+        data.forEach(a => {
+          let index = user.cart.findIndex(c => c.articleId == a._id.toString())
+          if (index == -1) {
+            console.log('Did not find cart item for article')
+          } else {
+            totalPrice += user.cart[index].amount * a.price
+          }
+        })
+        console.log('Total price is', totalPrice);
+        res.json({
+          totalPrice: totalPrice
+        })
+      });
+    }
+  })
+})
+
 app.listen(port, () => console.log(`${serviceName} started on localhost:${port}`))

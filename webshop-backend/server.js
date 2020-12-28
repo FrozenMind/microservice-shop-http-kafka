@@ -50,12 +50,12 @@ app.put('/login', (req, res) => {
 })
 
 app.get('/article', (req, res) => {
-  let pricemin = req.params.pricemin
-  let pricemax = req.params.pricemax
+  let pricemin = parseInt(req.query.pricemin)
+  let pricemax = parseInt(req.query.pricemax)
   console.log('Get Articles pricemin', pricemin, 'pricemax', pricemax)
   let param = '';
   if (pricemin) {
-    param += `pricemin=${pricemin}`;
+    param += `pricemin=${pricemin}&`;
   }
   if (pricemax) {
     param += `pricemax=${pricemax}`;
@@ -224,6 +224,84 @@ app.delete('/cart/:userid/:articleid', (req, res) => {
           break
       }
     });
+})
+
+app.get('/address/:userid', (req, res) => {
+  let userId = req.params.userid
+  console.log('Get Address of userid', userId)
+  axios.get(`http://localhost:61785/address/${userId}`)
+    .then(addRes => {
+      console.log('Got article')
+      res.json(addRes.data)
+    })
+    .catch(error => {
+      console.log('Error while getting address', error.response.status);
+      switch (error.response.status) {
+        case 404:
+          res.status(404).json({
+            error: 'User has no address'
+          })
+          break
+        default:
+          res.status(error.status).json({
+            error: 'Unknown error'
+          })
+          break
+      }
+    })
+})
+
+app.put('/address/:userid', (req, res) => {
+  let userId = req.params.userid
+  let address = req.body.address
+  console.log('Save new address', address, 'for userid', userId)
+  axios.put(`http://localhost:61785/address/${userId}`, {
+      address: address
+    })
+    .then(addRes => {
+      console.log('Address saved')
+      res.json(addRes.data)
+    })
+    .catch(error => {
+      console.log('Error while saving address', error.response.status);
+      switch (error.response.status) {
+        case 404:
+          res.status(404).json({
+            error: 'User does not exist'
+          })
+          break
+        default:
+          res.status(error.status).json({
+            error: 'Unknown error'
+          })
+          break
+      }
+    });
+})
+
+app.get('/cart/total-price/:userid', (req, res) => {
+  let userId = req.params.userid
+  console.log('Get total price of userid', userId)
+  axios.get(`http://localhost:61782/cart/total-price/${userId}`)
+    .then(addRes => {
+      console.log('Got total price')
+      res.json(addRes.data)
+    })
+    .catch(error => {
+      console.log('Error while getting total price', error.response.status);
+      switch (error.response.status) {
+        case 404:
+          res.status(404).json({
+            error: 'User has no cart'
+          })
+          break
+        default:
+          res.status(error.status).json({
+            error: 'Unknown error'
+          })
+          break
+      }
+    })
 })
 
 app.listen(port, () => console.log(`${serviceName} started on localhost:${port}`))

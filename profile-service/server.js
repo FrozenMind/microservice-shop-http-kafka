@@ -2,6 +2,7 @@ let express = require('express')
 let app = express()
 let cors = require('cors')
 const MongoClient = require('mongodb').MongoClient;
+const ObjectID = require('mongodb').ObjectID
 
 let serviceName = 'Profile-Service'
 let port = 61785
@@ -26,4 +27,69 @@ app.get('/ping', (req, res) => {
     status: 'alive'
   })
 })
+
+app.get('/address/:userid', (req, res) => {
+  let userId = req.params.userid
+  console.log('Get Address of userid', userId)
+  database.collection('user').find({
+    _id: ObjectID(userId)
+
+  }).toArray((err, data) => {
+    if (err) {
+      console.log('Could not connect database')
+      res.status(500).json({
+        error: 'Could not connect database'
+      })
+    } else if (data.length == 1) {
+      console.log('User found')
+      let user = data[0]
+      if (user.address) {
+        res.json({
+          address: user.address
+        });
+      } else {
+        res.status(404).json({
+          error: 'User has no address'
+        });
+      }
+    } else {
+      console.log('User not found')
+      res.status(404).json({
+        error: 'User not found'
+      })
+    }
+  })
+})
+
+app.put('/address/:userid', (req, res) => {
+  let userId = req.params.userid
+  let address = req.body.address
+  console.log('Save new address', address, 'for userid', userId)
+  database.collection('user').find({
+    _id: ObjectID(userId)
+  }).toArray((err, data) => {
+    if (err) {
+      console.log('Could not connect database')
+      res.status(500).json({
+        error: 'Could not connect database'
+      })
+    } else if (data.length == 1) {
+      console.log('User found')
+      let user = data[0]
+      user.address = address
+      database.collection('user').replaceOne({
+        _id: user._id
+      }, user)
+      res.json({
+        address: user.address
+      })
+    } else {
+      console.log('User not found')
+      res.status(404).json({
+        error: 'User not found'
+      })
+    }
+  })
+})
+
 app.listen(port, () => console.log(`${serviceName} started on localhost:${port}`))

@@ -1,48 +1,49 @@
-<div>
+<div class="checkout-container">
   <h2>Checkout</h2>
-  <div>
+  <div *ngIf="address" class="address">
     <span><strong>Address</strong></span>
-    <table>
+    <table class="address-table">
       <tr>
         <th>Name</th>
         <td>
-          <span *ngIf="!changeAddressMode"></span>
-          <input *ngIf="changeAddressMode" />
+          <span *ngIf="!changeAddressMode">{{address.name}}</span>
+          <input type="text" name="name" *ngIf="changeAddressMode" [(ngModel)]="address.name" />
         </td>
       </tr>
       <tr>
         <th>Street</th>
         <td>
-          <span *ngIf="!changeAddressMode"></span>
-          <input *ngIf="changeAddressMode" />
+          <span *ngIf="!changeAddressMode">{{address.street}}</span>
+          <input type="text" name="street" *ngIf="changeAddressMode" [(ngModel)]="address.street" />
         </td>
       </tr>
       <tr>
         <th>Zipcode</th>
         <td>
-          <span *ngIf="!changeAddressMode"></span>
-          <input *ngIf="changeAddressMode" />
+          <span *ngIf="!changeAddressMode">{{address.zipcode}}</span>
+          <input type="text" name="zipcode" *ngIf="changeAddressMode" [(ngModel)]="address.zipcode" />
         </td>
       </tr>
       <tr>
         <th>City</th>
         <td>
-          <span *ngIf="!changeAddressMode"></span>
-          <input *ngIf="changeAddressMode" />
+          <span *ngIf="!changeAddressMode">{{address.city}}</span>
+          <input type="text" name="city" *ngIf="changeAddressMode" [(ngModel)]="address.city" />
         </td>
       </tr>
       <tr>
         <th>Country</th>
         <td>
-          <span *ngIf="!changeAddressMode"></span>
-          <input *ngIf="changeAddressMode" />
+          <span *ngIf="!changeAddressMode">{{address.country}}</span>
+          <input type="text" name="country" *ngIf="changeAddressMode" [(ngModel)]="address.country" />
         </td>
       </tr>
     </table>
     <button *ngIf="!changeAddressMode" (click)="changeAddressMode = true">Change Adress</button>
     <button *ngIf="changeAddressMode" (click)="saveAddress()">Save Address</button>
   </div>
-  <div>
+  <div class="pay-container">
     <span><strong>Total Price {{totalPrice}}</strong></span>
+    <button class="pay-button" (click)="pay()">Pay</button>
   </div>
 </div>

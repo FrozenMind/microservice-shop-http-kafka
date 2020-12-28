@@ -1,19 +1,27 @@
 <div class="article-main">
-  <div>
+  <div class="filter">
     <h2>Filter</h2>
+    <span>Price min</span>
+    <input type="number" [(ngModel)]="pricemin" />
+    <span>Price max</span>
+    <input type="number" [(ngModel)]="pricemax" />
+    <button (click)="applyFilter()">Apply Filter</button>
   </div>
-  <table>
-    <tr>
-      <th>Image</th>
-      <th>Article</th>
-      <th>Price</th>
-      <th>Action</th>
-    </tr>
-    <tr *ngFor="let a of articles">
-      <td>{{a.image}}</td>
-      <td>{{a.name}}</td>
-      <td>{{a.price}}</td>
-      <td><button (click)="addToCart(a._id)">Add to Cart</button></td>
-    </tr>
-  </table>
+  <div class="articles">
+    <h2>Articles</h2>
+    <table>
+      <tr>
+        <th>Image</th>
+        <th>Article</th>
+        <th>Price</th>
+        <th>Action</th>
+      </tr>
+      <tr *ngFor="let a of articles">
+        <td>{{a.image}}</td>
+        <td>{{a.name}}</td>
+        <td>{{a.price}}</td>
+        <td><button (click)="addToCart(a._id)">Add to Cart</button></td>
+      </tr>
+    </table>
+  </div>
 </div>
