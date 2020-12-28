@@ -7,21 +7,22 @@
     <input type="number" [(ngModel)]="pricemax" />
     <button (click)="applyFilter()">Apply Filter</button>
   </div>
-  <div class="articles">
+  <div class="articles" *ngIf="articles && articles.length > 0">
     <h2>Articles</h2>
     <table>
       <tr>
-        <th>Image</th>
         <th>Article</th>
         <th>Price</th>
         <th>Action</th>
       </tr>
       <tr *ngFor="let a of articles">
-        <td>{{a.image}}</td>
         <td>{{a.name}}</td>
         <td>{{a.price}}</td>
         <td><button (click)="addToCart(a._id)">Add to Cart</button></td>
       </tr>
     </table>
+  </div>
+  <div class="articles" *ngIf="!articles || articles.length == 0">
+    <h3>No Articles match the filter</h3>
   </div>
 </div>

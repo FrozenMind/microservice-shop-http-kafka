@@ -127,7 +127,6 @@ app.get('/cart/:userid', (req, res) => {
               if (c.articleId == a._id) {
                 cart.push({
                   name: a.name,
-                  image: a.image,
                   articleId: c.articleId,
                   amount: c.amount,
                   price: a.price

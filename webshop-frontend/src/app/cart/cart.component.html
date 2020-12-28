@@ -2,10 +2,9 @@
   <div>
     <h2>My Cart</h2>
   </div>
-  <div *ngIf="articles">
+  <div *ngIf="articles &&  articles.length > 0">
     <table>
       <tr>
-        <th>Image</th>
         <th>Article</th>
         <th>Amount</th>
         <th>Price</th>
@@ -13,7 +12,6 @@
         <th>Action</th>
       </tr>
       <tr *ngFor="let a of articles">
-        <td>{{a.image}}</td>
         <td>{{a.name}}</td>
         <td>
           <select (change)="changeAmount(a.articleId, $event.target.value)">
@@ -28,7 +26,7 @@
       </tr>
     </table>
   </div>
-  <div *ngIf="!articles">
+  <div *ngIf="!articles || articles.length == 0">
     <h3>You have no articles in your cart yet</h3>
   </div>
 
