@@ -23,7 +23,7 @@
             <span *ngFor="let a of o.items">{{a.amount}} x <strong>{{a.name}}</strong> á {{a.price}} €</span>
           </div>
         </td>
-        <td>{{o.totalPrice}} €</td>
+        <td>{{o.totalPrice | number:'.2'}} €</td>
       </tr>
     </table>
   </div>

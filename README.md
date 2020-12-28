@@ -6,11 +6,9 @@
 * Run frontend with `cd webshop-frontend && ng serve`
 * Run MongoDB and Kafka in Docker `docker-compose up -d`
 * Init MongoDB data
-  * Run `docker ps` to get container id
-  * Login to docker `sudo docker exec -it <container-id> bash`
-  * Run `sh init_db.sh` to insert data
-  * Exit Docker by pressing __CTRL + D__
-* Now you can login by using credentials `tu@gmail.com` `pass`
+  * Run `cd init-db` to go into init folder
+  * Run `node init_db.js` to insert data
+* Now you can login by using credentials username: __tu@gmail.com__, password: __pass__
 ## Stop Services
 * Kill services by port with `sh kill_services.sh`
 * Kill frontend in bash with __CTRL + C__

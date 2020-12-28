@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  public email: string = 'vr@gmail.com';
+  public email: string = 'tu@gmail.com';
   public password: string = 'pass';
 
   constructor(private httpService: HttpService,

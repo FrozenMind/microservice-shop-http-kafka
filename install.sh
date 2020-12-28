@@ -20,3 +20,6 @@ cd ..
 cd webshop-frontend
 npm install
 cd ..
+cd init-db
+npm install
+cd ..

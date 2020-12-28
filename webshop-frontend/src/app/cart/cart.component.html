@@ -31,7 +31,7 @@
   </div>
 
   <div class="checkout-container">
-    <span><strong>Total: {{totalPrice()}}</strong></span>
+    <span><strong>Total: {{totalPrice() | number:'.2'}}</strong></span>
     <button class="checkout-button" (click)="checkout()">Checkout</button>
   </div>
 </div>
