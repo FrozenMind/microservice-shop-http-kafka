@@ -44,15 +44,24 @@ export class HttpService {
     return this.http.put(`http://localhost:61780/cart/${userid}/${articleId}`, { amount: amount });
   }
 
-  getAddress(userId: string) {
+  getAddress(userId: string): Observable<any> {
     return this.http.get(`http://localhost:61780/address/${userId}`);
   }
 
-  saveAddress(userId: string, address: any) {
+  saveAddress(userId: string, address: any): Observable<any> {
     return this.http.put(`http://localhost:61780/address/${userId}`, { address: address });
   }
 
-  getTotalCartPrice(userId: string) {
-    return this.http.get(`http://localhost:61782/cart/total-price/${userId}`);
+  getTotalCartPrice(userId: string): Observable<any> {
+    return this.http.get(`http://localhost:61780/cart/total-price/${userId}`);
   }
+
+  pay(userId: string): Observable<any> {
+    return this.http.put(`http://localhost:61780/pay/${userId}`, {});
+  }
+
+  getOrders(userId: string): Observable<any> {
+    return this.http.get(`http://localhost:61780/orders/${userId}`);
+  }
+
 }

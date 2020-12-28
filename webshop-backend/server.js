@@ -304,4 +304,54 @@ app.get('/cart/total-price/:userid', (req, res) => {
     })
 })
 
+app.put('/pay/:userid', (req, res) => {
+  let userId = req.params.userid
+  console.log('Pay for userid', userId)
+  axios.put(`http://localhost:61784/pay/${userId}`, {})
+    .then(addRes => {
+      console.log('Payed successful')
+      res.json(addRes.data)
+    })
+    .catch(error => {
+      console.log('Error while paying', error.response.status);
+      switch (error.response.status) {
+        case 404:
+          res.status(404).json({
+            error: 'User has no cart to pay for'
+          })
+          break
+        default:
+          res.status(error.status).json({
+            error: 'Unknown error'
+          })
+          break
+      }
+    })
+})
+
+app.get('/orders/:userid', (req, res) => {
+  let userId = req.params.userid
+  console.log('Get orders for userid', userId)
+  axios.get(`http://localhost:61785/orders/${userId}`, {})
+    .then(addRes => {
+      console.log('Orders received')
+      res.json(addRes.data)
+    })
+    .catch(error => {
+      console.log('Error while paying', error.response.status);
+      switch (error.response.status) {
+        case 404:
+          res.status(404).json({
+            error: 'User has no orders yet'
+          })
+          break
+        default:
+          res.status(error.status).json({
+            error: 'Unknown error'
+          })
+          break
+      }
+    })
+})
+
 app.listen(port, () => console.log(`${serviceName} started on localhost:${port}`))

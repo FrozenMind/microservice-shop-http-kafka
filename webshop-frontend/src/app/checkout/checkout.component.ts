@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { HttpService } from '../services/http.service';
 import { StateService } from '../services/state.service';
 
@@ -12,10 +13,11 @@ export class CheckoutComponent implements OnInit {
   totalPrice: number = 0;
   address: any;
   changeAddressMode = false;
-  userId: number;
+  userId: string;
 
   constructor(private state: StateService,
-    private httpService: HttpService) { }
+    private httpService: HttpService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.state.useridSub.subscribe(id => {
@@ -48,7 +50,12 @@ export class CheckoutComponent implements OnInit {
   }
 
   pay() {
-    console.log('Pay');
-
+    this.httpService.pay(this.userId).subscribe(res => {
+      console.log('Paied successful');
+      this.state.setCartAmount(0);
+      this.router.navigate(['/article']);
+    }, err => {
+      console.error('Paying failed', err);
+    })
   }
 }

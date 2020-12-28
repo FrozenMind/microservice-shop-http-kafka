@@ -1,0 +1,33 @@
+<div class="order-container">
+  <h2>My Oders</h2>
+  <div *ngIf="orders">
+    <table class="order-table">
+      <tr>
+        <th>Order date</th>
+        <th>Order Address</th>
+        <th>Articles</th>
+        <th>Total Price</th>
+      </tr>
+      <tr *ngFor="let o of orders">
+        <td>{{o.timestamp | date: 'dd.MM.yyyy HH:mm:ss' }}</td>
+        <td>
+          <div class="address">
+            <span>{{o.address.name}}</span>
+            <span>{{o.address.street}}</span>
+            <span>{{o.address.zipcode}} {{o.address.city}}</span>
+            <span>{{o.address.country}}</span>
+          </div>
+        </td>
+        <td>
+          <div class="items">
+            <span *ngFor="let a of o.items">{{a.amount}} x <strong>{{a.name}}</strong> á {{a.price}} €</span>
+          </div>
+        </td>
+        <td>{{o.totalPrice}} €</td>
+      </tr>
+    </table>
+  </div>
+  <div *ngIf="!orders">
+    <h3>You have no orders yet</h3>
+  </div>
+</div>

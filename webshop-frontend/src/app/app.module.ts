@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { ArticleComponent } from './article/article.component';
 import { CartComponent } from './cart/cart.component';
 import { CheckoutComponent } from './checkout/checkout.component';
+import { OrderComponent } from './order/order.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { CheckoutComponent } from './checkout/checkout.component';
     LoginComponent,
     ArticleComponent,
     CartComponent,
-    CheckoutComponent
+    CheckoutComponent,
+    OrderComponent
   ],
   imports: [
     BrowserModule,

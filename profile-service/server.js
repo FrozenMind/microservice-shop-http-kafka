@@ -92,4 +92,27 @@ app.put('/address/:userid', (req, res) => {
   })
 })
 
+app.get('/orders/:userid', (req, res) => {
+  let userId = req.params.userid
+  console.log('Get orders for userid', userId)
+  database.collection('order').find({
+    userId: ObjectID(userId)
+  }).toArray((err, data) => {
+    if (err) {
+      console.log('Could not connect database')
+      res.status(500).json({
+        error: 'Could not connect database'
+      })
+    } else if (data.length == 0) {
+      console.log('User has no orders yet')
+      res.status(404).json({
+        error: 'User has no orders yet'
+      })
+    } else {
+      console.log('Order found for user', data)
+      res.json(data)
+    }
+  })
+})
+
 app.listen(port, () => console.log(`${serviceName} started on localhost:${port}`))
