@@ -28,3 +28,4 @@
 | MongoDB Express | 8081 |
 ## Monitoring
 * You can monitor the database by browsing http://localhost:8081/
+* View/Manage Kafka via KafkaHQ http://localhost:8082/
