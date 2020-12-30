@@ -347,30 +347,11 @@ app.put('/address/:userid', (req, res) => {
     });
 })
 
-
 app.put('/pay/:userid', (req, res) => {
   let userId = req.params.userid
   console.log('Pay for userid', userId)
-  axios.put(`http://localhost:61784/pay/${userId}`, {})
-    .then(addRes => {
-      console.log('Payed successful')
-      res.json(addRes.data)
-    })
-    .catch(error => {
-      console.log('Error while paying', error.response.status);
-      switch (error.response.status) {
-        case 404:
-          res.status(404).json({
-            error: 'User has no cart to pay for'
-          })
-          break
-        default:
-          res.status(error.status).json({
-            error: 'Unknown error'
-          })
-          break
-      }
-    })
+  pushDataToKafka('pay', {userId: userId})
+  res.json({paied: true})
 })
 
 app.get('/orders/:userid', (req, res) => {

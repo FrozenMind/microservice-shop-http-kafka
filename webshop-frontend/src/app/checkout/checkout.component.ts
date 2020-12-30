@@ -52,8 +52,10 @@ export class CheckoutComponent implements OnInit {
   pay() {
     this.httpService.pay(this.userId).subscribe(res => {
       console.log('Paied successful');
-      this.state.setCartAmount(0);
-      this.router.navigate(['/article']);
+      this.state.cartAmountSub.subscribe(amount => {
+        this.state.addCartAmount(amount * -1);
+        this.router.navigate(['/article']);
+      })
     }, err => {
       console.error('Paying failed', err);
     })

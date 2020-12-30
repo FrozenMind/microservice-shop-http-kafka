@@ -85,7 +85,9 @@ export class AppComponent implements OnInit {
   logout() {
     this.state.setUsername('');
     this.state.setUserid('');
-    this.state.setCartAmount(0);
-    this.router.navigate([`/login`]);
+    this.state.cartAmountSub.subscribe(amount => {
+      this.state.addCartAmount(amount * -1);
+      this.router.navigate([`/login`]);
+    })
   }
 }
