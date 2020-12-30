@@ -3,15 +3,19 @@ let app = express()
 let cors = require('cors')
 const MongoClient = require('mongodb').MongoClient
 const ObjectID = require('mongodb').ObjectID
+const Kafka = require('kafka-node')
 
 let serviceName = 'Cart-Service'
 let port = 61782
 let database
 
+const client = new Kafka.KafkaClient({ kafkaHost: 'localhost:9092' })
+const producer = new Kafka.Producer(client)
+
 MongoClient.connect('mongodb://root:secret@localhost:27017', {
-    useUnifiedTopology: true
-  },
-  function(err, db) {
+  useUnifiedTopology: true
+},
+  function (err, db) {
     if (err) console.log(`${serviceName} failed to connect to MongoDB`, err)
     console.log(`${serviceName} connected to MongoDB!`)
     database = db.db("webshop")
@@ -28,217 +32,95 @@ app.get('/ping', (req, res) => {
   })
 })
 
-app.post('/cart/:userid', (req, res) => {
-  let userId = req.params.userid
-  let articleId = req.body.articleId
-  console.log('Add articleId', articleId, 'to cart of userid', userId)
-  database.collection('user').find({
-    _id: ObjectID(userId)
-  }).toArray((err, data) => {
-    if (err) {
-      console.log('Could not connect database')
-      res.status(500).json({
-        error: 'Could not connect database'
-      })
-      return
+// kafka consumer req.cart
+try {
+  let loginConsumer = new Kafka.Consumer(
+    client,
+    [{ topic: 'req.cart' }],
+    {
+      autoCommit: true,
+      fetchMaxWaitMs: 1000,
+      fetchMaxBytes: 1024 * 1024,
+      encoding: 'utf8',
+      groupId: 'cart-service'
     }
-    if (data.length != 1) {
-      res.status(404).json({
-        error: 'Could not find user'
-      })
-      return
-    }
-    let user = data[0]
-    if (!user.cart) {
-      user.cart = []
-    }
-    let index = user.cart.findIndex(c => c.articleId == articleId)
-    if (index >= 0) {
-      console.log('Article already exists in cart at index', index, 'so increase amount');
-      user.cart[index].amount += 1
-    } else {
-      console.log('Article does not exists in cart yet');
-      user.cart.push({
-        articleId: ObjectID(articleId),
-        amount: 1
-      })
-    }
-    database.collection('user').replaceOne({
-      _id: user._id
-    }, user)
-    res.status(200).json({
-      cartAmount: user.cart.length
-    })
-  })
-})
-
-app.get('/cart/:userid', (req, res) => {
-  let userId = req.params.userid
-  console.log('Get cart of userid', userId)
-  database.collection('user').find({
-    _id: ObjectID(userId)
-  }).toArray((err, data) => {
-    if (err) {
-      console.log('Could not connect database')
-      res.status(500).json({
-        error: 'Could not connect database'
-      })
-      return
-    }
-    if (data.length != 1) {
-      res.status(404).json({
-        error: 'Could not find user'
-      })
-      return
-    }
-    let user = data[0]
-    if (!user.cart || user.cart.length == 0) {
-      res.status(404).json({
-        error: 'User has no items in cart'
-      })
-      return
-    }
-    res.json(user.cart)
-  })
-})
-
-app.put('/cart/:userid/:articleid', (req, res) => {
-  let userId = req.params.userid
-  let articleId = req.params.articleid
-  let amount = req.body.amount
-  console.log('Change amount of articleid', articleId, 'of userid', userId, 'to', amount)
-  database.collection('user').find({
-    _id: ObjectID(userId)
-  }).toArray((err, data) => {
-    if (err) {
-      console.log('Could not connect database')
-      res.status(500).json({
-        error: 'Could not connect database'
-      })
-      return
-    }
-    if (data.length != 1) {
-      res.status(404).json({
-        error: 'Could not find user'
-      })
-      return
-    }
-    let user = data[0]
-    if (user.cart || user.cart.length != 0) {
-      let index = user.cart.findIndex(c => c.articleId == articleId)
-      if (index != -1) {
-        user.cart[index].amount = amount
-        database.collection('user').replaceOne({
-          _id: user._id
-        }, user)
-        res.json({
-          newAmount: user.cart[index].amount
-        })
+  )
+  loginConsumer.on('message', async function (msgstring) {
+    let msg = JSON.parse(msgstring.value)
+    console.log('request for cart', msg)
+    let userId = msg.body.userId
+    let articleId = msg.body.articleId
+    let amount = msg.body.amount
+    console.log('Change amount of articleid', articleId, 'of userid', userId, 'to', amount)
+    database.collection('user').find({
+      _id: ObjectID(userId)
+    }).toArray((err, data) => {
+      if (err) {
+        console.log('Could not connect database')
+        return
       }
-    } else {
-      res.status(404).json({
-        error: 'Article is not in cart yet'
-      })
-    }
-  })
-})
-
-app.delete('/cart/:userid/:articleid', (req, res) => {
-  let userId = req.params.userid
-  let articleId = req.params.articleid
-  console.log('Remove articleid', articleId, 'from cart of userid', userId)
-  database.collection('user').find({
-    _id: ObjectID(userId)
-  }).toArray((err, data) => {
-    if (err) {
-      console.log('Could not connect database')
-      res.status(500).json({
-        error: 'Could not connect database'
-      })
-      return
-    }
-    if (data.length != 1) {
-      res.status(404).json({
-        error: 'Could not find user'
-      })
-      return
-    }
-    let user = data[0]
-    if (user.cart || user.cart.length != 0) {
-      let index = user.cart.findIndex(c => c.articleId == articleId)
-      console.log('Remove article at index', index);
-      if (index != -1) {
-        user.cart.splice(index, 1)
-        database.collection('user').replaceOne({
-          _id: user._id
-        }, user)
+      if (data.length != 1) {
+        console.log('Could not find user')
+        return
       }
-    }
-    res.json({
-      cartAmount: user.cart.length
-    })
-  })
-})
-
-app.get('/cart/total-price/:userid', (req, res) => {
-  let userId = req.params.userid
-  console.log('Get total price of userid', userId)
-  database.collection('user').find({
-    _id: ObjectID(userId)
-  }).toArray((err, data) => {
-    if (err) {
-      console.log('Could not connect database')
-      res.status(500).json({
-        error: 'Could not connect database'
-      })
-      return
-    }
-    if (data.length != 1) {
-      res.status(404).json({
-        error: 'Could not find user'
-      })
-      return
-    }
-    let user = data[0]
-    if (!user.cart) {
-      res.status(404).json({
-        error: 'User has no cart'
-      })
-    } else {
-      let totalPrice = 0
-      console.log(user.cart);
-      let ids = []
-      user.cart.forEach(c => {
-        ids.push(ObjectID(c.articleId))
-      })
-      database.collection('article').find({
-        _id: {
-          $in: ids
-        }
-      }).toArray((err, data) => {
-        if (err) {
-          console.log('Could not connect database')
-          res.status(500).json({
-            error: 'Could not connect database'
-          })
-          return
-        }
-        console.log('Got articles', data);
-        data.forEach(a => {
-          let index = user.cart.findIndex(c => c.articleId == a._id.toString())
-          if (index == -1) {
-            console.log('Did not find cart item for article')
+      let user = data[0]
+      if (!user.cart) {
+        user.cart = []
+      }
+      let articleIndex = user.cart.findIndex(c => c.articleId == articleId)
+      switch (msg.command) {
+        case 'update':
+          if (articleIndex == -1) {
+            console.log('Add new article');
+            user.cart.push({
+              articleId: ObjectID(articleId),
+              amount: amount || 1
+            })
           } else {
-            totalPrice += user.cart[index].amount * a.price
+            console.log('Update amount at index', articleIndex);
+            user.cart[articleIndex].amount = user.cart[articleIndex].amount + (amount || 1)
           }
-        })
-        console.log('Total price is', totalPrice);
-        res.json({
-          totalPrice: totalPrice
-        })
-      });
-    }
+          break
+        case 'delete':
+          console.log('Remove article at index', articleIndex);
+          if (articleIndex != -1) {
+            user.cart.splice(articleIndex, 1)
+          }
+          break
+      }
+      database.collection('user').replaceOne({
+        _id: user._id
+      }, user)
+      pushDataToKafka('res.cart', {userId: user._id, cart: user.cart})
+    })
   })
-})
+  loginConsumer.on('error', function (error) {
+    //  handle error 
+    console.log('consumer error', error)
+  })
+}
+catch (error) {
+  console.log('error while building consumer', error)
+}
+
+function pushDataToKafka(topic, dataToPush) {
+  try {
+    let payloadToKafkaTopic = [{ topic: topic, messages: JSON.stringify(dataToPush) }]
+    console.log('Try to send', payloadToKafkaTopic)
+      producer.send(payloadToKafkaTopic, function (err, data) {
+        if(err) {
+          console.log('error on send', err)
+        }
+        console.log('send data', data)
+      })
+
+      producer.on('error', function (err) {
+        console.log('error while sending', err);
+      })
+  }
+  catch (error) {
+    console.log('error while building producer', error)
+  }
+}
 
 app.listen(port, () => console.log(`${serviceName} started on localhost:${port}`))

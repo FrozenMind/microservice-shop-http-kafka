@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
       this.router.navigate([`/article`]);
       this.state.setUsername(res.name);
       this.state.setUserid(res.userid);
-      this.state.setCartAmount(res.cartAmount);
+      this.state.addCartAmount(res.cartAmount);
     }, err => {
       console.error('Failed to login', err);
     })

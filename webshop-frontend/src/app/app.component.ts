@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
   paymentServiceStatus: any = { status: 'unknown' };
   profileServiceStatus: any = { status: 'unknown' };
   username: string;
-  cartAmount: number;
+  cartAmount: number = 0;
 
   constructor(private httpService: HttpService,
     private state: StateService,
@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
       }
     })
     this.state.cartAmountSub.subscribe(amount => {
-      this.cartAmount = amount;
+      this.cartAmount += amount;
     })
   }
 

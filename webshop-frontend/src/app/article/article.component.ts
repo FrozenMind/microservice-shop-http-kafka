@@ -32,10 +32,9 @@ export class ArticleComponent implements OnInit {
   }
 
   addToCart(articleId: number) {
-    // TODO: get size somehow
     this.httpService.addToCart(this.userid, articleId).subscribe(res => {
       console.log('Added article to cart');
-      this.state.setCartAmount(res.cartAmount);
+      this.state.addCartAmount(1);
     }, err => {
       console.error('Failed to add article to cart');
     })

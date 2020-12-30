@@ -23,7 +23,7 @@ export class StateService {
     this.userid.next(id);
   }
 
-  setCartAmount(amount: number) {
+  addCartAmount(amount: number) {
     this.cartAmount.next(amount);
   }
 }

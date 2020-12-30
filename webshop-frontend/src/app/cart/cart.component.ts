@@ -37,7 +37,7 @@ export class CartComponent implements OnInit {
       if (index != -1) {
         this.articles.splice(index, 1);
       }
-      this.state.setCartAmount(res.cartAmount)
+      this.state.addCartAmount(-1)
     }, err => {
       console.error('Failed to remove article from server', err);
     });
@@ -48,7 +48,9 @@ export class CartComponent implements OnInit {
       console.log('Amount changed succesful for articleid', articleId);
       let index = this.articles.findIndex(a => a.articleId == articleId)
       if (index != -1) {
-        this.articles[index].amount = parseInt(res.newAmount);
+        let newAmount = parseInt(res.newAmount);
+        this.state.addCartAmount(newAmount- this.articles[index].amount)
+        this.articles[index].amount = newAmount;
       }
     }, err => {
       console.error('Failed to remove article from server', err);

@@ -11,6 +11,12 @@
   "dependencies": {
     "axios": "^0.21.1",
     "cors": "^2.8.5",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "http": "0.0.1-security",
+    "kafka-node": "^5.0.0",
+    "kafka-streams": "^5.0.0",
+    "mongodb": "^3.6.3",
+    "stream": "0.0.2",
+    "websocket": "^1.0.33"
   }
 }

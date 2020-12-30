@@ -1,20 +1,43 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable , of, Subscriber} from 'rxjs';
+import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpService {
 
-  constructor(private http: HttpClient) { }
+  private socket: WebSocketSubject<any> = webSocket('ws://localhost:61779');
+  private observables: Array<{key: string, obs: Subscriber<any>}> = [];
+
+  constructor(private http: HttpClient) {
+    this.socket.asObservable().subscribe(res => {
+      switch(res.command) {
+        case 'login':
+          let obs = this.observables.find(o => o.key == 'login').obs;
+          if (res.body.error) {
+            obs.error(res.body.error);
+          } else {
+            obs.next(res.body);
+          }
+          break;
+        default:
+        console.log('Received unknown command', res.command);
+      }
+    });
+  }
 
   ping(port: number): Observable<any> {
     return this.http.get(`http://localhost:${port}/ping`);
   }
 
   login(email: string, password: string): Observable<any> {
-    return this.http.put('http://localhost:61780/login', { email: email, password: password });
+    this.socket.next({ command: 'login', body: { email: email, password: password }})
+    let logObs = new Observable(obs => {
+      this.observables.push({key: 'login', obs: obs})
+    })
+    return logObs;
   }
 
   articles(pricemin: number, pricemax: number): Observable<any> {
