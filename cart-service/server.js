@@ -34,18 +34,20 @@ app.get('/ping', (req, res) => {
 
 // kafka consumer req.cart
 try {
-  let loginConsumer = new Kafka.Consumer(
-    client,
-    [{ topic: 'req.cart' }],
+   let cartConsumer = new Kafka.ConsumerGroup(
     {
-      autoCommit: true,
-      fetchMaxWaitMs: 1000,
-      fetchMaxBytes: 1024 * 1024,
+      kafkaHost: 'localhost:9092',
+      groupId: 'cart-service',
+      sessionTimeout: 15000,
+      protocol: ['roundrobin'],
       encoding: 'utf8',
-      groupId: 'cart-service'
-    }
-  )
-  loginConsumer.on('message', async function (msgstring) {
+      fromOffset: 'latest',
+      commitOffsetsOnFirstJoin: false,
+      outOfRangeOffset: 'latest', // default
+    },
+    'req.cart')
+
+    cartConsumer.on('message', async function (msgstring) {
     let msg = JSON.parse(msgstring.value)
     console.log('request for cart', msg)
     let userId = msg.body.userId
@@ -78,7 +80,11 @@ try {
             })
           } else {
             console.log('Update amount at index', articleIndex);
-            user.cart[articleIndex].amount = user.cart[articleIndex].amount + (amount || 1)
+            if (amount) {
+              user.cart[articleIndex].amount = amount
+            } else {
+              user.cart[articleIndex].amount += 1
+            }
           }
           break
         case 'delete':
@@ -94,7 +100,8 @@ try {
       pushDataToKafka('res.cart', {userId: user._id, cart: user.cart})
     })
   })
-  loginConsumer.on('error', function (error) {
+
+  cartConsumer.on('error', function (error) {
     //  handle error 
     console.log('consumer error', error)
   })

@@ -34,18 +34,20 @@ app.get('/ping', (req, res) => {
 
 // kafka consumer
 try {
-  let consumer = new Kafka.Consumer(
-    client,
-    [{ topic: 'req.login' }],
+  let loginConsumer = new Kafka.ConsumerGroup(
     {
-      autoCommit: true,
-      fetchMaxWaitMs: 1000,
-      fetchMaxBytes: 1024 * 1024,
+      kafkaHost: 'localhost:9092',
+      groupId: 'login-service',
+      sessionTimeout: 15000,
+      protocol: ['roundrobin'],
       encoding: 'utf8',
-      groupId: 'login-service-2'
-    }
-  )
-  consumer.on('message', async function (msgstring) {
+      fromOffset: 'latest',
+      commitOffsetsOnFirstJoin: false,
+      outOfRangeOffset: 'latest', // default
+    },
+    'req.login')
+
+  loginConsumer.on('message', async function (msgstring) {
     let msg = JSON.parse(msgstring.value)
     database.collection('user').find({
       email: msg.email,
@@ -82,7 +84,7 @@ try {
       }
     })
   })
-  consumer.on('error', function (error) {
+  loginConsumer.on('error', function (error) {
     //  handle error 
     console.log('consumer error', error)
   })
